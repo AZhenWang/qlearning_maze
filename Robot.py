@@ -75,7 +75,7 @@ class Robot(object):
             # TODO 5. Return whether do random choice
             # hint: generate a random number, and compare
             # it with epsilon
-            if self.epsilon > self.epsilon0 * 0.4:
+            if random.uniform(0,1) < self.epsilon:
                 return True
             else:
                 return False
