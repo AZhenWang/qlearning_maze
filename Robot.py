@@ -46,7 +46,8 @@ class Robot(object):
             self.epsilon = 0
         else:
             # TODO 2. Update parameters when learning
-            self.epsilon = self.epsilon0*np.exp(-0.01*self.t)
+            # self.epsilon = self.epsilon0*np.exp(-0.006*self.t)
+            self.epsilon = self.epsilon0/(self.t/150 + 1) 
             self.t += 1
             
         return self.epsilon
@@ -63,8 +64,7 @@ class Robot(object):
         """
         Create the qtable with the current state
         """
-        if state not in self.Qtable.keys():
-            self.Qtable[state] = dict.fromkeys(self.valid_actions,0.)
+        self.Qtable.setdefault(state, dict.fromkeys(self.valid_actions,0.))
     
     def choose_action(self):
         """

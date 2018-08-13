@@ -35,6 +35,7 @@ class Runner(object):
             'success': [],
             'reward': [],
             'times': [],
+            'epsilon':[],
         }
         self.display_direction = display_direction
         # self.maze_data = {}
@@ -65,6 +66,7 @@ class Runner(object):
         for e in range(training_epoch):
             accumulated_reward = 0
             run_time = 0
+            self.train_robot_statics['epsilon'].append(self.robot.epsilon)
             for i in range(training_per_epoch):
                 train_logger_before_act(e, i)
                 action, reward = self.robot.update()
@@ -109,6 +111,7 @@ class Runner(object):
             self.test_robot_statics['success'].append(0)
         self.test_robot_statics['reward'].append(accumulated_reward)
         self.test_robot_statics['times'].append(run_time)
+        self.train_robot_statics['epsilon'].append(self.robot.epsilon)
 
     # Generate video header
     def draw_header(self, base_image):
@@ -177,15 +180,21 @@ class Runner(object):
 
         writer.release()
 
-    def plot_results(self):
-        plt.figure(figsize=(12,4))
-        plt.subplot(131)
-        plt.title("Success Times")
+    def plot_results(self, suptitle):
+        plt.figure(figsize=(10,4))
+        plt.subplot(141)
+        fontdict={'fontsize':8}
+        plt.title("Success Times", fontdict)
         plt.plot(np.cumsum(self.train_robot_statics['success']))
-        plt.subplot(132)
-        plt.title("Accumulated Rewards")
+        plt.subplot(142)
+        plt.title("Accumulated Rewards", fontdict)
         plt.plot(np.array(self.train_robot_statics['reward']))
-        plt.subplot(133)
-        plt.title("Runing Times per Epoch")
+        plt.subplot(143)
+        plt.title("Runing Times per Epoch", fontdict)
         plt.plot(np.array(self.train_robot_statics['times']))
+        plt.subplot(144)
+        plt.title("Epsilon per Epoch", fontdict)
+        plt.plot(np.array(self.train_robot_statics['epsilon']))
+        plt.suptitle(suptitle, fontsize=14, verticalalignment='top')
         plt.show()
+
